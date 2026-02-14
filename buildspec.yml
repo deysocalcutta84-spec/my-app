@@ -24,8 +24,8 @@ phases:
 
   post_build:
     commands:
-      - scp -o StrictHostKeyChecking=no -i key.pem app.py requirements.txt ec2-user@54.151.56.14:/home/ec2-user/
-      - ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.151.56.14 'sudo yum install -y python3 && pip3 install flask && nohup python3 /home/ec2-user/app.py > output.log 2>&1 &'
+      - scp -o StrictHostKeyChecking=no -i key.pem app.py requirements.txt ec2-user@54.193.115.177:/home/ec2-user/
+      - ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@54.193.115.177 'sudo yum install -y python3 && pip3 install flask && nohup python3 /home/ec2-user/app.py > output.log 2>&1 &'
 
 artifacts:
   files:
