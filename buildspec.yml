@@ -10,7 +10,7 @@ phases:
     runtime-versions:
       python: 3.11
     commands:
-      - apt install -y openssh-clients
+      - sudo apt install -y openssh-clients
 
   pre_build:
     commands:
