@@ -10,7 +10,7 @@ phases:
     runtime-versions:
       python: 3.11
     commands:
-      - yum install -y openssh-clients
+      - apt install -y openssh-clients
 
   pre_build:
     commands:
