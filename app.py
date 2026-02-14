@@ -1,20 +1,12 @@
-# app.py
+from flask import Flask
 
-import requests
-from datetime import datetime
+app = Flask(__name__)
 
-def get_time():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-def call_api():
-    response = requests.get("https://api.github.com")
-    if response.status_code == 200:
-        return "GitHub API is reachable!"
-    else:
-        return "Failed to reach GitHub API"
+@app.route("/")
+def home():
+    return "Hello from AWS CodeBuild Public EC2!"
 
 if __name__ == "__main__":
-    print("Application Started")
-    print("Current Time:", get_time())
-    print(call_api())
-    print("Application Finished Successfully")
+    # Use port 5000 to avoid permission issues in VS Code / local machine
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
