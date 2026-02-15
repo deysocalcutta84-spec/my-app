@@ -16,7 +16,9 @@ phases:
 
   pre_build:
     commands:
-      - echo "$EC2_KEY" > key.pem
+
+      # This command properly formats the key with newlines
+      - echo "$EC2_KEY" | awk '{gsub(/RSA /,"RSA\n"); gsub(/-----END/,"\n-----END"); print}' > key.pem
       - chmod 400 key.pem
 
   build:
