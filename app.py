@@ -4,9 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Hello from AWS CodeBuild Public EC2!"
+    return "Hello World from CI/CD Pipeline using AWS Codebuild and GitHub 🚀"
 
 if __name__ == "__main__":
-    # Use port 5000 to avoid permission issues in VS Code / local machine
-    app.run(host="0.0.0.0", port=5000, debug=True)
-
+    app.run(host="0.0.0.0", port=80)
