@@ -30,7 +30,8 @@ phases:
     commands:
       - echo "Deploying application to EC2 using SSH + Git"
       - |
-        ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST '
+        ssh -v -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST
+
           set -e
 
           echo "Installing system dependencies"
