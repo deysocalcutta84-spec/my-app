@@ -4,44 +4,57 @@ env:
   variables:
     EC2_USER: ec2-user
     EC2_HOST: 3.144.223.151
+    APP_DIR: my-app
 
 phases:
   install:
     runtime-versions:
       python: 3.11
     commands:
-      - echo "Installing SSH client"
+      - echo "Installing SSH client in CodeBuild"
       - apt-get update -y
-      - apt-get install -y openssh-client
+      - apt-get install -y openssh-client git
 
   pre_build:
     commands:
-      - echo "Creating SSH key file"
-      - echo -e "$SSH_KEY" > key.pem
+      - echo "Creating SSH private key file"
+      - echo "$SSH_KEY" > key.pem
       - chmod 400 key.pem
-      - echo "SSH key file details:"
       - ls -l key.pem
 
   build:
     commands:
-      - echo "Build phase successful"
+      - echo "Build phase completed (nothing to compile)"
 
   post_build:
     commands:
-      - echo "Copying files to EC2"
-      - scp -o StrictHostKeyChecking=no -i key.pem app.py requirements.txt $EC2_USER@$EC2_HOST:/home/ec2-user/
-
-      - echo "Running application on EC2"
+      - echo "Deploying application to EC2 using SSH + Git"
       - |
         ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST '
-          sudo yum install -y python3 python3-pip || sudo apt-get install -y python3 python3-pip
-          python3 -m pip install --upgrade pip
-          pip3 install -r /home/ec2-user/requirements.txt
-          pkill -f app.py || true
-          nohup python3 /home/ec2-user/app.py > output.log 2>&1 &
-        '
+          set -e
 
-artifacts:
-  files:
-    - app.py
-    - requirements.txt
+          echo "Installing system dependencies"
+          sudo yum install -y git python3 python3-pip
+
+          echo "Moving to home directory"
+          cd /home/ec2-user
+
+          if [ ! -d "'"$APP_DIR"'" ]; then
+            echo "Cloning repository for first time"
+            git clone https://github.com/deysocalcutta84-spec/my-app.git '"$APP_DIR"'
+          fi
+
+          echo "Pulling latest code"
+          cd '"$APP_DIR"'
+          git pull
+
+          echo "Installing Python dependencies"
+          sudo python3 -m pip install --upgrade pip
+          sudo python3 -m pip install -r requirements.txt
+
+          echo "Restarting application"
+          pkill -f app.py || true
+          nohup python3 app.py > output.log 2>&1 &
+
+          echo "Deployment successful"
+        '
