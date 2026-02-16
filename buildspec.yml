@@ -37,4 +37,4 @@ phases:
       - scp -o StrictHostKeyChecking=no -i key.pem app.py requirements.txt \
         $EC2_USER@$EC2_HOST:/home/$EC2_USER/
 
-      - echo "Deployment completed successfully"
+      - echo "Deployment completed successfullys"
